@@ -39,5 +39,5 @@ jobs:
         run: |
           cd processor
           npx ncc build src/index.ts
-          zip -j deploy.zip ./dist/*
+          zip -j -r deploy.zip ./dist/*
           aws lambda update-function-code --function-name=Regeneron-Processor-S3-Trigger --zip-file=fileb://deploy.zip
