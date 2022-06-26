@@ -7,6 +7,7 @@ on:
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  PRISMA_GENERATE_DATAPROXY: true
 
 jobs:
   deploy_lambda:
