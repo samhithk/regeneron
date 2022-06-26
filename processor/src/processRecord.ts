@@ -1,4 +1,3 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { prisma } from "./db";
 
 interface CSVRecord {
