@@ -1,3 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
+let db: PrismaClient | undefined = undefined;
+
+if (db === undefined) {
+  db = new PrismaClient();
+}
+
+export const prisma = db;
