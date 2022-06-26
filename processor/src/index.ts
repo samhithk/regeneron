@@ -8,7 +8,7 @@ export async function handler(event: S3Event) {
   try {
     job = await prisma.fileProcessorJob.create({
       data: {
-        fileName: event.Records[0].s3.object.key,
+        fileName: `${event.Records[0].s3.object.key}-${event.Records[0].s3.object.versionId}`,
         lastHeartBeat: new Date(),
         jobState: "RUNNING",
       },

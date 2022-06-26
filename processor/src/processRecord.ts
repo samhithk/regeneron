@@ -21,7 +21,7 @@ function transformRecord(record: CSVRecord) {
   return {
     id: +record.conceptId,
     displayName: record.displayName,
-    description: record.displayName,
+    description: record.description,
     alternateNames: record.alternateNames
       .split(",")
       .filter((name) => name !== "null"),

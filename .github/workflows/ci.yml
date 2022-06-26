@@ -9,17 +9,6 @@ env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
-  run_migrations:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-      - name: Migrate Database
-        run: |
-          cd processor
-          npx prisma migrate deploy
   deploy_lambda:
     runs-on: ubuntu-latest
     steps:
@@ -42,6 +31,10 @@ jobs:
         run: |
           cd processor
           npm ci
+      - name: Migrate Database
+        run: |
+          cd processor
+          npx prisma migrate deploy
       - name: Generate Client For Data Proxy
         run: |
           cd processor
