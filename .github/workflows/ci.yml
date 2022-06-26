@@ -7,7 +7,6 @@ on:
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  PRISMA_GENERATE_DATAPROXY: true
 
 jobs:
   deploy_lambda:
@@ -36,6 +35,11 @@ jobs:
         run: |
           cd processor
           npx prisma migrate deploy
+      - name: Generate Client For Data Proxy
+        run: |
+          cd processor
+          echo "DATABASE_URL=${{ secrets.DATABASE_DATAPROXY_URL }}" >> $GITHUB_ENV
+          npx prisma generate --data-proxy
       - name: Deploy
         run: |
           cd processor
