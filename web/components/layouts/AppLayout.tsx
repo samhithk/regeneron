@@ -9,7 +9,7 @@ export interface AppLayoutProps {
 
 export const AppLayout: FC<AppLayoutProps> = ({ children }) => {
   return (
-    <main className="h-screen w-screen overflow-hidden bg-gray-50">
+    <main className="h-screen w-screen overflow-hidden">
       <header className="flex flex-shrink-0 items-center justify-between border-b border-gray-200 p-2">
         <Image
           height={32}
