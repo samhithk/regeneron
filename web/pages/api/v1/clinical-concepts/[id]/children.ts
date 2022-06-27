@@ -11,13 +11,20 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  const { id } = req.query;
-  const children = await prisma.clinicalConcept.findMany({
-    where: {
-      parentIds: {
-        array_contains: [+id],
-      },
-    },
-  });
-  res.status(200).json({ children });
+  switch (req.method) {
+    case "GET": {
+      const { id } = req.query;
+      const children = await prisma.clinicalConcept.findMany({
+        where: {
+          parentIds: {
+            array_contains: [+id],
+          },
+        },
+      });
+      res.status(200).json({ children });
+    }
+    default: {
+      res.status(404).end();
+    }
+  }
 }

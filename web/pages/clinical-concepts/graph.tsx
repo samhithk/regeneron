@@ -1,43 +1,49 @@
-import { AppLayout, Node } from "../../components";
-import { Page } from "../../types";
-import { GetStaticProps, GetStaticPaths, GetServerSideProps } from "next";
 import { ClinicalConcept } from "@prisma/client";
+import { GetServerSideProps } from "next";
+import { useEffect, useState } from "react";
+import { useClinicalConcept } from "../../api";
+import {
+  AppLayout,
+  GraphContextProvider,
+  Node,
+  NodeEditor,
+} from "../../components";
 import { prisma } from "../../server";
+import { Page } from "../../types";
 
-interface GraphProps {
+interface GraphPageProps {
   root: ClinicalConcept;
 }
 
-const Graph: Page<GraphProps> = ({ root }) => {
+const GraphPage: Page<GraphPageProps> = ({ root }) => {
+  const [_, setSelectedConcept] = useState<ClinicalConcept>();
+  const { data: rootNode } = useClinicalConcept(root.id, {
+    initialData: root,
+  });
+
+  useEffect(() => {
+    setSelectedConcept(rootNode);
+  }, [setSelectedConcept, rootNode]);
+
   return (
     <div className="flex h-full w-full">
-      <div className="w-80 border-r border-gray-200"></div>
-      <div className="h-full w-full overflow-hidden bg-gray-50">
-        <div className="flex h-full w-full overflow-scroll p-6">
-          <Node
-            data={root}
-            // childNodes={[clinicalConcepts[1], clinicalConcepts[2]]}
-          />
-          {/* <div>
-            {Array.from(Array(100).keys()).map((el) => (
-              <div key={el} className="flex">
-                {Array.from(Array(20).keys()).map((el) => (
-                  <div key={el} className="m-4 h-20 w-20 bg-red-500"></div>
-                ))}
-              </div>
-            ))}
-          </div> */}
+      <GraphContextProvider>
+        <NodeEditor />
+        <div className="h-full w-full overflow-hidden bg-gray-50">
+          <div className="flex h-full w-full overflow-scroll p-6">
+            {rootNode && <Node data={rootNode} />}
+          </div>
         </div>
-      </div>
+      </GraphContextProvider>
     </div>
   );
 };
 
-Graph.Layout = AppLayout;
+GraphPage.Layout = AppLayout;
 
-export const getServerSideProps: GetServerSideProps<GraphProps> = async (
-  context
-) => {
+export const getServerSideProps: GetServerSideProps<
+  GraphPageProps
+> = async () => {
   const root = await prisma.clinicalConcept.findUnique({
     where: { id: 1 },
   });
@@ -53,4 +59,4 @@ export const getServerSideProps: GetServerSideProps<GraphProps> = async (
   };
 };
 
-export default Graph;
+export default GraphPage;
