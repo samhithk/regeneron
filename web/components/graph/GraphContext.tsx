@@ -25,6 +25,7 @@ export const GraphContextProvider: FC<GraphContextProviderProps> = ({
   children,
 }) => {
   const [state, setState] = useState<ClinicalConcept>();
+
   return (
     <GraphContext.Provider
       value={{

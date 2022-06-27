@@ -13,7 +13,7 @@ interface NodeEditorProps {
 export const NodeEditor: FC<NodeEditorProps> = ({ rootId }) => {
   const { selectedConcept: inital, setSelectedConcept } =
     useContext(GraphContext);
-  const { data: selectedConcept } = useClinicalConcept(inital?.id || -1, {
+  const { data: selectedConcept } = useClinicalConcept(inital?.id || rootId, {
     initialData: inital,
   });
   const { mutate, isLoading: saveLoading } = useUpdateClinicalConcept();
