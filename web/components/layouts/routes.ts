@@ -6,7 +6,7 @@ export const appRoutes: NavRoute[] = [
     icon: "bi-diagram-3",
   },
   {
-    href: "/clinical-concepts/table",
-    icon: "bi-table",
+    href: "/clinical-concepts/upload",
+    icon: "bi-upload",
   },
 ];
