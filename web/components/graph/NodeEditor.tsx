@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FC, useContext, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useUpdateClinicalConcept } from "../../api";
+import { useClinicalConcept, useUpdateClinicalConcept } from "../../api";
 import { ClinicalConceptPut, ClinicalConceptPutForm } from "../../validation";
 import { TagsInput } from "../forms";
 import { GraphContext } from "./GraphContext";
@@ -9,7 +9,10 @@ import { GraphContext } from "./GraphContext";
 interface NodeEditorProps {}
 
 export const NodeEditor: FC<NodeEditorProps> = () => {
-  const { selectedConcept } = useContext(GraphContext);
+  const { selectedConcept: inital } = useContext(GraphContext);
+  const { data: selectedConcept } = useClinicalConcept(inital!!.id, {
+    initialData: inital,
+  });
   const { mutate, isLoading: saveLoading } = useUpdateClinicalConcept();
   const isHidden = selectedConcept === undefined || selectedConcept === null;
 
