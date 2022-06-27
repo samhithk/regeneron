@@ -14,7 +14,7 @@ export interface GraphContextProviderProps {
 
 export interface GraphContext {
   selectedConcept?: ClinicalConcept;
-  setSelectedConcept: (concept: ClinicalConcept) => void;
+  setSelectedConcept: (concept?: ClinicalConcept) => void;
 }
 
 export const GraphContext = createContext<GraphContext>({

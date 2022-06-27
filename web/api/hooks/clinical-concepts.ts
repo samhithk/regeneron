@@ -43,27 +43,20 @@ export function useClinicalConceptChildren(
   );
 }
 
-async function updateClinicalConcept({
-  id,
-  ...data
-}: ClinicalConceptPut & { id: number }) {
-  const response = await axios.put(
-    `${BASE_API_URL}/clinical-concepts/${id}`,
-    data
-  );
+async function updateClinicalConcept(data: ClinicalConceptPut) {
+  const response = await axios.put(`${BASE_API_URL}/clinical-concepts`, data);
   return response.data;
 }
 
 export function useUpdateClinicalConcept() {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    ClinicalConcept,
-    unknown,
-    ClinicalConceptPut & { id: number }
-  >((params) => updateClinicalConcept(params), {
-    onSettled: () => {
-      queryClient.invalidateQueries("clinical-concepts");
-    },
-  });
+  return useMutation<ClinicalConcept, unknown, ClinicalConceptPut>(
+    (params) => updateClinicalConcept(params),
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries("clinical-concepts");
+      },
+    }
+  );
 }

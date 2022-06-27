@@ -28,7 +28,7 @@ const GraphPage: Page<GraphPageProps> = ({ root }) => {
   return (
     <div className="flex h-full w-full">
       <GraphContextProvider>
-        <NodeEditor />
+        <NodeEditor rootId={root.id} />
         <div className="h-full w-full overflow-hidden bg-gray-50">
           <div className="flex h-full w-full overflow-scroll p-6">
             {rootNode && <Node data={rootNode} />}

@@ -6,15 +6,17 @@ import { ClinicalConceptPut, ClinicalConceptPutForm } from "../../validation";
 import { TagsInput } from "../forms";
 import { GraphContext } from "./GraphContext";
 
-interface NodeEditorProps {}
+interface NodeEditorProps {
+  rootId: number;
+}
 
-export const NodeEditor: FC<NodeEditorProps> = () => {
-  const { selectedConcept: inital } = useContext(GraphContext);
-  const { data: selectedConcept } = useClinicalConcept(inital!!.id, {
+export const NodeEditor: FC<NodeEditorProps> = ({ rootId }) => {
+  const { selectedConcept: inital, setSelectedConcept } =
+    useContext(GraphContext);
+  const { data: selectedConcept } = useClinicalConcept(inital?.id || -1, {
     initialData: inital,
   });
   const { mutate, isLoading: saveLoading } = useUpdateClinicalConcept();
-  const isHidden = selectedConcept === undefined || selectedConcept === null;
 
   const {
     register,
@@ -25,6 +27,7 @@ export const NodeEditor: FC<NodeEditorProps> = () => {
   } = useForm<ClinicalConceptPut>({
     resolver: zodResolver(ClinicalConceptPutForm),
     defaultValues: {
+      id: selectedConcept?.id,
       displayName: selectedConcept?.displayName || "",
       description: selectedConcept?.description || "",
       alternateNames: selectedConcept?.alternateNames || [],
@@ -35,6 +38,7 @@ export const NodeEditor: FC<NodeEditorProps> = () => {
 
   useEffect(() => {
     reset({
+      id: selectedConcept?.id,
       displayName: selectedConcept?.displayName || "",
       description: selectedConcept?.description || "",
       alternateNames: selectedConcept?.alternateNames || [],
@@ -44,35 +48,32 @@ export const NodeEditor: FC<NodeEditorProps> = () => {
   }, [reset, selectedConcept]);
 
   const onSubmit = async (data: ClinicalConceptPut) => {
-    if (!!selectedConcept)
-      mutate({
-        ...data,
-        id: selectedConcept.id,
-      });
-    // setSaveLoading(true);
-    // try {
-    //   if (selectedConcept === undefined)
-    //     throw Error("No selected clinical concept");
-    //   const response = await axios.put(
-    //     `${BASE_API_URL}/clinical-concepts/${selectedConcept.id}`,
-    //     data
-    //   );
-    //   setSelectedConcept(response.data);
-    // } catch (e) {
-    //   //todo
-    // } finally {
-    //   setSaveLoading(false);
-    // }
+    mutate({
+      ...data,
+    });
   };
-
-  if (isHidden) return null;
 
   return (
     <div className="transaition w-80 divide-gray-200 border-r border-gray-200">
-      <div className="px-4 pt-4">
+      <div className="flex items-center justify-between px-4 pt-4">
         <label className="text-sm text-gray-600">
-          ID : {selectedConcept.id}
+          ID : {selectedConcept?.id}
         </label>
+        <button
+          onClick={() => {
+            setSelectedConcept(undefined);
+            // reset({
+            //   displayName: "",
+            //   description: "",
+            //   alternateNames: [],
+            //   parentIds: [],
+            //   childIds: [],
+            // });
+          }}
+          className="rounded px-2 transition hover:bg-gray-200"
+        >
+          <i className="bi-plus-lg"></i>
+        </button>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 p-4">
         <section className="flex flex-col">
